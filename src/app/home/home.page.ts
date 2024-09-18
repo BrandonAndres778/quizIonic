@@ -1,13 +1,37 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { MenuController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
-  standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  selector: 'app-example',
+  templateUrl: 'example.component.html',
 })
-export class HomePage {
-  constructor() {}
+export class ExampleComponent {
+  constructor(private menuCtrl: MenuController) {}
+
+  openFirstMenu() {
+    /**
+     * Open the menu by menu-id
+     * We refer to the menu using an ID
+     * because multiple "start" menus exist.
+     */
+    this.menuCtrl.open('first-menu');
+  }
+
+  openSecondMenu() {
+    /**
+     * Open the menu by menu-id
+     * We refer to the menu using an ID
+     * because multiple "start" menus exist.
+     */
+    this.menuCtrl.open('second-menu');
+  }
+
+  openEndMenu() {
+    /**
+     * Open the menu by side
+     * We can refer to the menu by side
+     * here because only one "end" menu exists
+     */
+    this.menuCtrl.open('end');
+  }
 }

@@ -1,20 +1,41 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-menu menuId="first-menu" contentId="main-content">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title>Primer menú</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-content class="ion-padding">Materia</ion-content>
+</ion-menu>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+<ion-menu menuId="second-menu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>segundo Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">Notas</ion-content>
+</ion-menu>
+
+<ion-menu side="end" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">Editar.</ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <p>Toque un botón a continuación para abrir un menú específico.</p>
+
+    <ion-button expand="block" (click)="openFirstMenu()">Abrir Primer Menu</ion-button>
+    <ion-button expand="block" (click)="openSecondMenu()">Abrir Segundo Menu</ion-button>
+    <ion-button expand="block" (click)="openEndMenu()">Abrir especifico Menu</ion-button>
+  </ion-content>
+</div>
