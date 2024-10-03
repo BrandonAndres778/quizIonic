@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'inicio',
-    loadComponent: () => import('./inic/inic.page').then( m => m.InicioPage)
+    loadComponent: () => import('src/app/inic/inic.page').then( m => m.InicioPage)
   },
   {
     path: 'materia',
@@ -26,6 +26,15 @@ export const routes: Routes = [
     path: 'nota/:MateriaId/nota/:NotaId',
     loadComponent: () => import('./nota/nota.page').then( m => m.NotaPage)
   },
+  {
+    path: 'lista-materias',
+    loadComponent: () => import('./lista-materias/lista-materias.page').then( m => m.ListaMateriasPage)
+  },
+  {
+    path: 'listanotas/:materiaID',
+    loadComponent: () => import('./listanotas/listanotas.page').then( m => m.ListanotasPage)
+  },
+
  
 
 

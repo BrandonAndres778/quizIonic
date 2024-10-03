@@ -13,14 +13,11 @@
       </ion-item>
 
 
-      <ion-item >
-        <ion-list *ngIf="controlMateria.length > 0">
-          <h2>Materias</h2>
-          <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]">
-              {{materia.nombre}}
+        <ion-list>
+          <ion-item [routerLink]="['/lista-materias']">
+            <h2>Materias</h2>
           </ion-item>
         </ion-list>
-      </ion-item>
 
 
       <ion-item [routerLink]="['/materia']">
@@ -38,38 +35,13 @@
       <ion-buttons>
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title>Materias</ion-title>
-      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarMaterias($event)" placeholder="Buscar materias ..."></ion-searchbar>
+      <ion-button (click)="ActualizarPage()">Actualizar pagina</ion-button>
+      <ion-title>INICIO</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content> 
-
-    <ion-refresher slot="fixed" (ionRefresh)="ActualizarPagina($event)">
-      <ion-refresher-content pullingText="Desliza para refrescar" refreshingSpinner="circles"></ion-refresher-content>
-    </ion-refresher>
-
-
-    <div *ngIf="controlMateria.length === 0">
-      <p>No tienes materias registradas aún.</p>
-    </div>
-
-
-    <!-- Lista de materias cuando sí existen -->
-    <ion-list *ngIf="controlMateria.length > 0">
-      <ion-item *ngFor="let materia of controlMateria" [routerLink]="['/materia', materia.id]" class="materia_item">
-        <ion-label>
-          {{materia.nombre}} - {{materia.notas}}
-        </ion-label>
-      </ion-item>
-    </ion-list>
-
-    <!-- Botón para agregar una nueva materia -->
-    <ion-button expand="block" fill="solid" color="primary" [routerLink]="['/materia']" class="botonAgregar">
-      Agregar Materia
-    </ion-button>
-
-    <ion-button expand="block" fill="outline" color="danger" (click)="clearStorage()" class="botonLimpiar">
-      Limpiar Storage
+    <ion-button expand="block" fill="solid" color="primary" [routerLink]="['/lista-materias']" class="botonAgregar">
+      Lista de materias
     </ion-button>
   </ion-content>
 </div>

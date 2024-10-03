@@ -1,0 +1,76 @@
+
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+
+
+    <ion-list>
+      <ion-item [routerLink]="['/inicio']">
+        <h2>Inicio</h2>
+      </ion-item>
+      <ion-item [routerLink]="['/lista-materias']">
+        <h2>Materias</h2>
+      </ion-item>
+      <ion-item [routerLink]="['/materia']">
+        Crear Materia
+      </ion-item>
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons>
+        <ion-menu-button></ion-menu-button>
+        <ion-button (click)="ActualizarPage()">Actualizar pagina</ion-button>
+      </ion-buttons>
+      <ion-title>{{titulo}}</ion-title>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="buscarNotas($event)" placeholder="Buscar notas ..."></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content> 
+
+    
+<ion-content  class="contenedor">
+
+  <!--Codigo por si no hay notas mostrar un mensaje-->
+  <div *ngIf="notas.length === 0" class="no-notas">
+    <p>No hay notas registradas --- Agregue nuevas notas</p>
+  </div>
+  <ion-button expand="block" fill="solid" color="medium"  [routerLink]="['/nota', materia.id]">Agregar Nota</ion-button>
+    <div *ngFor="let corte of [1, 2, 3, 4]" class="contenedor_corte">
+      <ion-card class="corte_card">
+        <ion-card-header>
+          <ion-card-title>Corte: {{corte}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list *ngIf="notasFiltradasCorte[corte] && notasFiltradasCorte[corte].length > 0">
+            <ion-item *ngFor="let nota of notasFiltradasCorte[corte]" >
+              <ion-card class="nota_card">
+                <ion-card-title>ID: {{nota.id}} </ion-card-title>
+                <ion-card-subtitle>Nota: {{nota.nota}}</ion-card-subtitle>
+                <ion-card-subtitle>Fecha de entrega: {{nota.fechaEntrega}}  </ion-card-subtitle>
+                <ion-card-subtitle>descripcion: {{nota.descripcion}}</ion-card-subtitle>
+              </ion-card>
+              <ion-buttons class="contenedorBoton" slot="end">
+                <ion-button color="success" fill="solid" [routerLink]="['/nota', materia.id, 'nota', nota.id]">MODIFICAR</ion-button><br>
+                <ion-button color="danger" fill="solid" (click)="confirmarEliminarNota(nota.id)">BORRAR</ion-button>
+              </ion-buttons>
+            </ion-item>
+          
+          </ion-list>
+          <!-- Mostrar mensaje si no hay notas para el corte actual -->
+          <p *ngIf="!notasFiltradasCorte[corte] || notasFiltradasCorte[corte].length === 0">
+            No hay notas registradas para este corte.
+          </p>
+       
+        </ion-card-content>
+      </ion-card>
+    </div> 
+</ion-content>

@@ -9,20 +9,17 @@ import { IonContent, IonHeader,
     IonCardHeader, IonCardTitle,
      IonCardContent, IonButtons,
       IonMenu, IonMenuButton,
-       IonCardSubtitle, IonSearchbar, IonRefresherContent, IonRefresher } from '@ionic/angular/standalone';
-import { ControlMateriaService } from '../servic/ctrl-mat.service';
-import { ControlNotaService } from '../servic/nota.service';
+       IonCardSubtitle, IonSearchbar } from '@ionic/angular/standalone';
+import { MateriasService } from '../servic/ctrl-mat.service';
 import { Materia } from '../model/materia';
-import { Nota } from '../model/nota';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router'; // Importar Rutas
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-materia',
   templateUrl: './materia.page.html',
   styleUrls: ['./materia.page.scss'],
   standalone: true,
-  imports: [IonRefresher, IonRefresherContent, IonCardSubtitle, IonButtons,
+  imports: [IonCardSubtitle, IonButtons,
     IonCardContent,
     IonCardTitle,
     IonCardHeader,
@@ -44,15 +41,11 @@ import { AlertController } from '@ionic/angular';
     FormsModule]
 })
 export class MateriaPage implements OnInit {
-controlMateria: Materia[] = [];
-controlNota: Nota[] = [];
+Materias: Materia[] = [];
 materiaID: any;
 editar: boolean = false;
 titulo = 'Crear Materia'
-notasFiltradasCorte: { [corte: number]: Nota[] } = {};
-searchTerm: string = '';
 
-Irnota: boolean = false;
 
 
   materia: Materia = {
@@ -65,35 +58,21 @@ Irnota: boolean = false;
     observaciones: ''
   };
 
-  constructor(private controlMateriaService: ControlMateriaService, private controlNotaService: ControlNotaService, private router: Router, private activatedRoute: ActivatedRoute,   private alertController: AlertController) { }
+  constructor(private MateriasService: MateriasService, private router: Router, private activatedRoute: ActivatedRoute) { }
   async ngOnInit() {
     this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID'); // Obtener materiaID al inicio
-    await this.loadNotas();
-    console.log(this.controlNota.filter(nota => nota.corte === 1))
     if(this.materiaID){
-      await this.loadMateria(this.materiaID)
-      this.titulo = this.materia.nombre
+      await this.CargarMateria(this.materiaID)
+      this.titulo = "modificar ", this.materia.nombre
       this.editar = true;
-      this.filtrarNotasMateria()
     }
 
 
   }
 
-  //Buscar  Notas
-  
-  buscarNotas(event: any) {
-    const searchValue = event.target.value.toLowerCase();
 
-    for (let corte of [1, 2, 3, 4]) {
-      this.notasFiltradasCorte[corte] = this.controlNota.filter(nota =>
-        nota.descripcion.toLowerCase().includes(searchValue) && nota.corte === corte
-      );
-    }
-  }
-
-  async loadMateria(id: number){
-    const materia = await this.controlMateriaService.getMateria(id);
+  async CargarMateria(id: number){
+    const materia = await this.MateriasService.getMateria(id);
     if(materia){
       this.materia = materia;
     } else {
@@ -101,25 +80,11 @@ Irnota: boolean = false;
     }
   }
 
-  async loadNotas() {
-    this.controlNota = await this.controlNotaService.getControlNota();
-    const notasMateria = this.controlNota.filter(nota => nota.idMateria === this.materiaID)
-    if(notasMateria){
-      this.materia.notas = notasMateria.map(nota => nota.nota)
+
       
-    }
-    this.materiaID = this.activatedRoute.snapshot.paramMap.get('materiaID')
-
-  }
-
-  //Para acualizar los datos de la pagina, refrescarla
-  ActualizarPagina(event: any) {
-    setTimeout(async () => {
-      location.reload()
-      await this.loadNotas();
-      event.target.complete(); 
-    }, 2000); 
-  }
+  ActualizarPage() {
+    location.reload()
+}
 
 
   GuardarMateria(){
@@ -129,95 +94,19 @@ Irnota: boolean = false;
       this.crearMateria()
     }
   }
-
-
-  filtrarNotasMateria() {
-    const cortes = [1,2,3,4]; // Define los cortes
-
-    // Filtrar las notas por idMateria y corte al mismo tiempo
-    cortes.forEach(corte => {
-      this.notasFiltradasCorte[corte] = this.controlNota.filter(nota =>
-        nota.idMateria === this.materia.id && nota.corte === corte
-      );
-      console.log(this.controlNota.filter(nota => nota.corte === corte))  
-    });
-  }
-
-
-  //   
-  async confirmarEliminarNota(id: number) {
-    const alert = await this.alertController.create({
-      header: 'Confirmar eliminación',
-      message: '¿Estás seguro de que quieres eliminar esta nota?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Eliminación cancelada');
-          }
-        },
-        {
-          text: 'Eliminar',
-          handler: async () => {
-            await this.borrarNota(id);
-            console.log('Nota eliminada');
-            this.mostrarAlerta('Nota eliminada con éxito');
-            location.reload();
-          }
-        }
-      ]
-    });
-  
-    await alert.present();
-  }
  
-  async mostrarAlerta(mensaje: string) {
-    const alert = await this.alertController.create({
-      header: 'Éxito',
-      message: mensaje,
-      buttons: ['OK']
-    });
-    await this.controlMateriaService.loadMaterias()
-    await alert.present();
-  }
 
-  // crear la materia, guardarla en el storage
   async crearMateria() {
-    await this.controlMateriaService.CrearMateria(this.materia); // Guardar materia
-    await this.controlMateriaService.loadMaterias()
-    if(this.Irnota === false){
-      this.router.navigate(['/inicio']); 
-    }
-     // Navegar de vuelta al inicio
-    this.mostrarAlerta('Materia guardada con éxito');
+    await this.MateriasService.CrearMateria(this.materia);
+    this.router.navigate(['/lista-materias']); 
   }
 
-  // Para actualizarNota
+ 
 
   async actualizarMateria() {
-    await this.controlMateriaService.ActualizarMateria(this.materia);
-    this.router.navigate(['/inicio']);
+    await this.MateriasService.ActualizarMateria(this.materia);
+    this.router.navigate(['/lista-materias']);
 }
 
-  async IrNota(){
-    if(this.materiaID){
-      this.Irnota === false;
-      } else {
-      this.crearMateria()
-      this.Irnota === true;
-    }
-  }
-// limpiar todo el storage de notas
-  async clearStorage(){
-    await this.controlNotaService.clear();
-    this.controlNota = []
-  }
-
-  // borrar nota de forma individual
-  async borrarNota(id: number){
-    await this.controlNotaService.BorrarNota(id)
-  }
 
 }

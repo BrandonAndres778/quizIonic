@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonList, IonButton, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import { ControlNotaService } from '../servic/nota.service';
+import { NotasService } from '../servic/nota.service';
 import { Nota } from '../model/nota'
 import { Router, ActivatedRoute,  RouterModule } from '@angular/router';
 
@@ -24,12 +24,13 @@ import { Router, ActivatedRoute,  RouterModule } from '@angular/router';
     IonSelect,
     IonSelectOption,
     RouterModule,
-    FormsModule,]
+  FormsModule]
 })
 export class NotaPage implements OnInit{
 MateriaID: any;
 notaID: any;
-TextGuardar = '';
+Titulo = '';
+tituloBoton = "crear";
 editando: boolean = false;
   nota: Nota = { 
     id: 1,
@@ -41,7 +42,7 @@ editando: boolean = false;
     observaciones: ''
     };
 
-  constructor(private controlNotaService:ControlNotaService, private router:Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private NotasService:NotasService, private router:Router, private activatedRoute: ActivatedRoute) { }
 
 async ngOnInit(){ 
   this.notaID = this.activatedRoute.snapshot.paramMap.get('NotaId')
@@ -54,16 +55,18 @@ async ngOnInit(){
 
 
   if (this.notaID) {
-    this.TextGuardar = 'Actualizar Nota'
+    this.Titulo = this.nota.descripcion
+    this.tituloBoton = "Actualizar"
     this.editando = true;
-    await this.loadNota(this.notaID);
+    await this.CargarNota(this.notaID);
   } else {
-    this.TextGuardar = 'Crear Nota'
+    this.Titulo = 'Crear Nota'
+    this.tituloBoton = "Crear"
   }
 
 }
-async loadNota(id: number) {
-  const nota = await this.controlNotaService.getNota(id);
+async CargarNota(id: number) {
+  const nota = await this.NotasService.getNota(id);
   if (nota) {
     this.nota = nota;
   } else {
@@ -80,14 +83,14 @@ GuardarNota(){
 }
 
 async actualizarNota() {
-    await this.controlNotaService.ActualizarNota(this.nota);
-  this.router.navigate(['/materia', this.nota.idMateria]);  // Redirigir a la materia después de guardar
+    await this.NotasService.ActualizarNota(this.nota);
+  this.router.navigate(['/listanotas', this.nota.idMateria]);  // Redirigir a la materia después de guardar
 }
 
   async crearNota() {
     this.nota.idMateria = this.MateriaID
-    await this.controlNotaService.CrearNota(this.nota);
-    this.router.navigate(['/materia', this.nota.idMateria])
+    await this.NotasService.CrearNota(this.nota);
+    this.router.navigate(['/listanotas', this.nota.idMateria])
   }
 
 

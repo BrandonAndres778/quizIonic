@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Notas</ion-title>
+    <ion-title>{{Titulo}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,10 +24,10 @@
     <ion-item>
       <ion-label position="floating">Corte</ion-label>
       <ion-select [(ngModel)]="nota.corte" name="corte" required>
-        <ion-select-option [value]="1">Primer Corte</ion-select-option>
-        <ion-select-option [value]="2">Segundo Corte</ion-select-option>
-        <ion-select-option [value]="3">Tercer Corte</ion-select-option>
-        <ion-select-option [value]="4">Corte Final</ion-select-option>
+        <ion-select-option [value]="1">Corte 1</ion-select-option>
+        <ion-select-option [value]="2">Corte 2</ion-select-option>
+        <ion-select-option [value]="3">Corte 3</ion-select-option>
+        <ion-select-option [value]="4">Corte 4</ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -36,7 +36,7 @@
       <ion-input type="date" [(ngModel)]="nota.fechaEntrega" name="fechaEntrega" required></ion-input>
     </ion-item>
     
-    <ion-button type="submit">{{TextGuardar}}</ion-button>
+    <ion-button type="submit">{{tituloBoton}}</ion-button>
     <ion-button [routerLink] = "['/materia']">Cancelar</ion-button>
   </form>
 

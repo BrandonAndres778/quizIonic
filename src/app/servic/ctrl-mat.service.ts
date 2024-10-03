@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ControlMateriaService {
-  private ControlMateria: Materia[] = [];
-  private STORAGENOTA_KEY = 'Control';
+export class MateriasService {
+  private Materias: Materia[] = [];
+  private clave = 'Materias';
 
   constructor(private storage: Storage) {
     this.init();
@@ -20,55 +20,55 @@ export class ControlMateriaService {
   }
 
   async loadMaterias() {
-    let materias = await this.storage.get(this.STORAGENOTA_KEY);
+    let materias = await this.storage.get(this.clave);
     if (materias) {
-      this.ControlMateria = materias;
+      this.Materias = materias;
     } else {
-      this.ControlMateria = [];  // Si no hay materias, inicializa como arreglo vacío
+      this.Materias = [];  // Si no hay materias, inicializa como arreglo vacío
     }
   }
 
 
-  async getControlMateria(): Promise<Materia[]> {
+  async getMaterias(): Promise<Materia[]> {
     await this.loadMaterias();
-    return this.ControlMateria;
+    return this.Materias;
   }
 
   getMateria(id: number) {
-    return this.ControlMateria.find(m => m.id === id);
+    return this.Materias.find(m => m.id === id);
   }
 
   async CrearMateria(materia: Materia) {
-    this.ControlMateria.push(materia);
+    this.Materias.push(materia);
     await this.GuardarStorage();  // Guardar después de crear
   }
 
   async ActualizarMateria(materia: Materia) {
-    const index = this.ControlMateria.findIndex(m => m.id === materia.id);
+    const index = this.Materias.findIndex(m => m.id === materia.id);
     if (index !== -1) {
-      this.ControlMateria[index] = materia;
+      this.Materias[index] = materia;
       await this.GuardarStorage();
     }
   }
 
   async BorrarMateria(id: number) {
-    this.ControlMateria = this.ControlMateria.filter(m => m.id !== id);
+    this.Materias = this.Materias.filter(m => m.id !== id);
     this.GuardarStorage();
   }
 
   private async GuardarStorage() {
-    await this.storage.set(this.STORAGENOTA_KEY, this.ControlMateria);
+    await this.storage.set(this.clave, this.Materias);
     this.loadMaterias();
   }
 
   public async clear(){
     this.storage.clear();
-    this.ControlMateria = [];
+    this.Materias = [];
     this.loadMaterias();
   }
 
   getNotas(id: number) {
-    const materia = this.ControlMateria.find(m => m.id === id);  // Encuentra la materia por id
+    const materia = this.Materias.find(m => m.id === id);  // Encuentra la materia por id
     return materia ? materia.notas : [];  // Si la materia existe, devuelve las notas, si no, un arreglo vacío
   }
 

@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ControlNotaService {
-  private ControlNota: Nota[] = [];
-  private STORAGE_KEY = 'Nota';
+export class NotasService {
+  private Notas: Nota[] = [];
+  private clave = 'Notas';
 
   constructor(private storage: Storage) {
     this.init();
@@ -20,49 +20,49 @@ export class ControlNotaService {
   }
 
   async loadNotas() {
-    let Notas = await this.storage.get(this.STORAGE_KEY);
+    let Notas = await this.storage.get(this.clave);
     if (Notas) {
-      this.ControlNota = Notas;
+      this.Notas = Notas;
     } else {
-      this.ControlNota = [];  // Si no hay Notas, inicializa como arreglo vacío
+      this.Notas = [];  // Si no hay Notas, inicializa como arreglo vacío
     }
   }
 
-  async getControlNota(): Promise<Nota[]> {
+  async getNotas(): Promise<Nota[]> {
     await this.loadNotas();
-    return this.ControlNota;
+    return this.Notas;
   }
 
   getNota(id: number) {
-    return this.ControlNota.find(m => m.id === id);
+    return this.Notas.find(m => m.id === id);
   }
 
   async CrearNota(Nota: Nota) {
-    this.ControlNota.push(Nota);
+    this.Notas.push(Nota);
     await this.GuardarStorage();  // Guardar después de crear
   }
 
   async ActualizarNota(Nota: Nota) {
-    const index = this.ControlNota.findIndex(m => m.id === Nota.id);
+    const index = this.Notas.findIndex(m => m.id === Nota.id);
     if (index !== -1) {
-      this.ControlNota[index] = Nota;
+      this.Notas[index] = Nota;
       await this.GuardarStorage();
     }
   }
 
   async BorrarNota(id: number) {
-    this.ControlNota = this.ControlNota.filter(m => m.id !== id);
+    this.Notas = this.Notas.filter(m => m.id !== id);
     this.GuardarStorage();
   }
 
   private async GuardarStorage() {
-    await this.storage.set(this.STORAGE_KEY, this.ControlNota);
+    await this.storage.set(this.clave, this.Notas);
     this.loadNotas();
   }
 
   public async clear(){
     this.storage.clear();
-    this.ControlNota = [];
+    this.Notas = [];
     this.loadNotas();
   }
 
